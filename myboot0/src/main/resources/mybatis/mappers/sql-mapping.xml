@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.EmpDAO"> <!--jstl 태그 쓸때 <c:foreach처럼 emp.emplist -->
+
+
+<select id="emplist" resultType="empVo"> <!--emplist로 실행할거다. 한개의 레코드 타입은 empVO <typeAlias 에서 정의한것  -->
+select * from employees
+</select>
+
+<select id="empone" resultType="empVo" parameterType="int">
+select * from employees where employee_id=#{id}
+</select>
+
+<insert id="insertemp" parameterType="empVo">
+insert into employees(employee_id, first_name, last_name, email, phone_number, job_id, hire_date ) 
+values(#{employee_id}, #{first_name}, #{last_name}, #{email}, #{phone_number}, #{job_id}, sysdate )
+</insert>
+
+<update id="updateemp" parameterType="empVO">
+update employees
+set last_name = #{last_name} , department_id=#{department_id}
+where employee_Id= #{employee_id}
+</update>
+
+<delete id="deleteemp" parameterType="String">
+delete employees where last_name like #{name}
+</delete>
+
+<select id="cnt" resultType="int"> 
+select count(*) from employees
+</select>
+
+<select id="empdeptlist" resultType="empVO" parameterType="int[]">
+ select * from employees where department_id in 
+ <foreach collection="array" item="d_list" open="(" close=")" separator="," > 
+ #{d_list}
+ </foreach> 
+</select>
+
+
+
+</mapper>
+
+<!-- 
+<foreach collection="array" item="d_list" separator="and" > d_list를 변수로 지정해서 배열로 쓰겠다. 나눌때 'and'
+ #{d_list}
+ </foreach> 
+
+int [] = {150, 200}
+select * from employees
+where employee_id>=150 and employee_id<=200;  == where employee_id between 150 and 200;
+ -->
